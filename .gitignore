@@ -1,0 +1,7 @@
+decoder
+encoder
+.idea
+.env
+logs
+test_trainer
+**/__pycache__/**
