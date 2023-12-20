@@ -34,10 +34,13 @@ def ter(ref, gen):
     if len(ref) == 1:
         total_score = pyter.ter(gen[0].split(), ref[0].split())
     else:
-        total_score = 0
-        for i in range(len(gen)):
-            total_score = total_score + pyter.ter(gen[i].split(), ref[i].split())
-        total_score = total_score / len(gen)
+        try:
+            total_score = 0
+            for i in range(len(gen)):
+                total_score = total_score + pyter.ter(gen[i].split(), ref[i].split())
+            total_score = total_score / len(gen)
+        except ZeroDivisionError:
+            total_score = 0
     return total_score
 
 
@@ -118,11 +121,16 @@ def rouge_n(reference_sentences, evaluated_sentences, n=2):
 
 
 def score_generated_sentences(generated_sentences, evaluated_sentences):
-    return dict(
-        bleu=bleu(generated_sentences, evaluated_sentences),
-        ter=ter(generated_sentences, evaluated_sentences),
-        rouge=rouge_n(generated_sentences, evaluated_sentences)
-    )
+    return [
+        bleu(generated_sentences, evaluated_sentences),
+        ter(generated_sentences, evaluated_sentences),
+        rouge_n(generated_sentences, evaluated_sentences)
+    ]
+    # return dict(
+    #     bleu=bleu(generated_sentences, evaluated_sentences),
+    #     ter=ter(generated_sentences, evaluated_sentences),
+    #     rouge=rouge_n(generated_sentences, evaluated_sentences)
+    # )
 
 
 if __name__ == '__main__':
