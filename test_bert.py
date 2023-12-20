@@ -1,26 +1,14 @@
 import random
+import time
 
-from transformers import Trainer, DataCollatorForSeq2Seq, TrainingArguments
-from transformers import BertTokenizer, EncoderDecoderModel
+from bert import model, tokenizer, preprocess_function, device
 import torch
-from transformers import ProgressCallback
-
 from datasets import load_dataset
-from utils import test
-import os
+import numpy as np
+from metrics import score_generated_sentences
 
 
-torch.manual_seed(42)
 ds = load_dataset("csebuetnlp/BanglaParaphrase")
-max_length = 128
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-tokenizer = BertTokenizer.from_pretrained("./encoder")
-model = EncoderDecoderModel.from_encoder_decoder_pretrained("./encoder", "./decoder")
-
-model.config.decoder_start_token_id = tokenizer.cls_token_id
-model.config.pad_token_id = tokenizer.pad_token_id
-model.to(device)
 
 
 index = random.randint(0, 1000)
@@ -34,3 +22,25 @@ print("tokenized target:", tokenizer.decode(tokenized.input_ids[0]))
 
 outputs = model.generate(input_ids=tokenized.input_ids, max_new_tokens=128)
 print("output", tokenizer.decode(outputs[0]).split("[SEP]")[0])
+
+tokenized_test = ds["test"].select(range(500)).map(preprocess_function, batched=True)
+
+
+def predict(examples):
+    input_ids = torch.from_numpy(np.array(examples["input_ids"])).to(device)
+    o = model.generate(input_ids=input_ids, max_new_tokens=128)
+    os = []
+    for i in o:
+        os.append(" ".join(tokenizer.decode(i).split("[SEP]")[0].split(" ")[1:]))
+    examples["output"] = os
+    return examples
+
+
+started = time.time()
+test = tokenized_test.map(lambda batch: predict(batch), batched=True, batch_size=256)
+
+# print(len(test["target"]), test["target"])
+# print(len(test["output"]), test["output"])
+scores = score_generated_sentences(test["target"], test["output"])
+print(scores)
+print("scoring time (seconds):", time.time() - started)

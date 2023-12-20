@@ -15,4 +15,3 @@ def test(tokenizer, start, end, ds, device, model, max_length):
         print("test result:", tokenizer.decode(result[0], skip_special_tokens=True))
         print("test result:", tokenizer.decode(result[1], skip_special_tokens=True))
         print("test result:", tokenizer.decode(result[2], skip_special_tokens=True))
-
