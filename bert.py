@@ -3,6 +3,10 @@ import torch
 
 
 max_length = 128
+encoder_location = "./encoder"
+decoder_location = "./decoder"
+
+
 torch.manual_seed(42)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
@@ -25,3 +29,10 @@ def preprocess_function(examples):
     model_inputs['labels'] = labels['input_ids']
 
     return model_inputs
+
+
+def save_model():
+    print("saving model")
+    model.encoder.save_pretrained(encoder_location)
+    tokenizer.save_pretrained(encoder_location)
+    model.decoder.save_pretrained(decoder_location)

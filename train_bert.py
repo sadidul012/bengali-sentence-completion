@@ -6,7 +6,7 @@ import tqdm
 from transformers import Trainer, DataCollatorForSeq2Seq, TrainingArguments, TrainerCallback
 from metrics import score_generated_sentences
 from datasets import load_dataset
-from bert import tokenizer, model, device, preprocess_function, max_length
+from bert import tokenizer, model, device, preprocess_function, max_length, save_model
 ds = load_dataset("csebuetnlp/BanglaParaphrase")
 
 
@@ -113,10 +113,8 @@ try:
 except KeyboardInterrupt:
     pass
 
-model.encoder.save_pretrained("./encoder")
-tokenizer.save_pretrained("./encoder")
-model.decoder.save_pretrained("./decoder")
 
+save_model()
 print("inference")
 tokenized1 = tokenizer(ds["test"][:1]["source"], return_tensors="pt").to(device)
 print("tokenized source:", tokenizer.decode(tokenized1.input_ids[0]))

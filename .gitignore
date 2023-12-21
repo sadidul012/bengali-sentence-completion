@@ -1,7 +1,12 @@
-decoder
-encoder
 .idea
 .env
-logs
 test_trainer
 **/__pycache__/**
+
+decoder
+encoder
+logs
+
+bert-decoder
+bert-encoder
+bert-logs
