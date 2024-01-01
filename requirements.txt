@@ -8,3 +8,5 @@ torch==2.0.1
 transformers==4.31.0
 
 datasets~=2.15.0
+tqdm~=4.66.1
+fasttext~=0.9.2

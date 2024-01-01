@@ -10,3 +10,9 @@ logs
 bert-decoder
 bert-encoder
 bert-logs
+dataset
+fasttext_model
+bert-tokenizer-bangla
+bert_logs
+bert-base-uncased-bangla
+backup-bert-base-uncased-bangla
