@@ -38,3 +38,12 @@ for i in list(closest):
         break
 
 print(next_words)
+
+# word cloud
+# top used words
+# tsne
+
+# bert architecture
+# Fast architecture
+
+
